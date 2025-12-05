@@ -1086,42 +1086,6 @@ impl ContainerService for LocalContainerService {
         self.track_child_msgs_in_store(execution_process.id, &mut spawned.child)
             .await;
 
-        // If this is the first execution for a task attempt with assigned ports, show a system message
-        // Only show for SetupScript or initial CodingAgent request, not follow-ups
-        let is_first_execution = matches!(
-            execution_process.run_reason,
-            ExecutionProcessRunReason::SetupScript
-        ) || matches!(
-            executor_action.typ(),
-            ExecutorActionType::CodingAgentInitialRequest(_)
-        );
-        if is_first_execution {
-            if let Some(assigned_ports_json) = &task_attempt.assigned_ports {
-                if let Ok(ports) = serde_json::from_str::<std::collections::HashMap<String, u16>>(assigned_ports_json) {
-                    if !ports.is_empty() {
-                        let port_list: Vec<String> = ports
-                            .iter()
-                            .map(|(k, v)| format!("{}={}", k, v))
-                            .collect();
-                        let message = format!(
-                            "Assigned ports from .env.vibe: {}",
-                            port_list.join(", ")
-                        );
-
-                        if let Some(store) = self.msg_stores.read().await.get(&execution_process.id) {
-                            let entry = executors::logs::NormalizedEntry {
-                                timestamp: None,
-                                entry_type: NormalizedEntryType::SystemMessage,
-                                content: message,
-                                metadata: None,
-                            };
-                            store.push_patch(ConversationPatch::add_normalized_entry(0, entry));
-                        }
-                    }
-                }
-            }
-        }
-
         self.add_child_to_store(execution_process.id, spawned.child)
             .await;
 

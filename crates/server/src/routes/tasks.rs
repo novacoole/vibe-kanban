@@ -257,7 +257,7 @@ pub async fn update_task(
         if let Ok(Some(project)) =
             Project::find_by_id(&deployment.db().pool, task.project_id).await
         {
-            if project.release_ports_on_completion {
+            if project.should_release_ports_on_completion() {
                 if let Ok(released) =
                     TaskAttempt::release_assigned_ports_for_task(&deployment.db().pool, task.id)
                         .await

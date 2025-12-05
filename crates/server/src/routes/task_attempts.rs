@@ -516,7 +516,7 @@ pub async fn merge_task_attempt(
     Task::update_status(pool, ctx.task.id, TaskStatus::Done).await?;
 
     // Release assigned ports if project setting is enabled
-    if ctx.project.release_ports_on_completion {
+    if ctx.project.should_release_ports_on_completion() {
         let released = TaskAttempt::release_assigned_ports_for_task(pool, ctx.task.id).await?;
         if released > 0 {
             tracing::info!(
@@ -1504,7 +1504,7 @@ pub async fn attach_existing_pr(
             Task::update_status(pool, task.id, TaskStatus::Done).await?;
 
             // Release assigned ports if project setting is enabled
-            if project.release_ports_on_completion {
+            if project.should_release_ports_on_completion() {
                 let released = TaskAttempt::release_assigned_ports_for_task(pool, task.id).await?;
                 if released > 0 {
                     tracing::info!(

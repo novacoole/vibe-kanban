@@ -36,7 +36,7 @@ interface ProjectFormState {
   dev_script: string;
   cleanup_script: string;
   copy_files: string;
-  release_ports_on_completion: boolean;
+  release_ports_on_completion: boolean; // UI uses boolean, null defaults to true
 }
 
 function projectToFormState(project: Project): ProjectFormState {
@@ -47,7 +47,7 @@ function projectToFormState(project: Project): ProjectFormState {
     dev_script: project.dev_script ?? '',
     cleanup_script: project.cleanup_script ?? '',
     copy_files: project.copy_files ?? '',
-    release_ports_on_completion: project.release_ports_on_completion,
+    release_ports_on_completion: project.release_ports_on_completion ?? true, // null defaults to true
   };
 }
 

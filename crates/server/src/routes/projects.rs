@@ -372,7 +372,7 @@ pub async fn update_project(
         dev_script,
         cleanup_script,
         copy_files,
-        release_ports_on_completion.unwrap_or(existing_project.release_ports_on_completion),
+        release_ports_on_completion.or(existing_project.release_ports_on_completion),
     )
     .await
     {

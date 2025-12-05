@@ -135,7 +135,7 @@ impl PrMonitorService {
                 if let Ok(Some(task)) = Task::find_by_id(&self.db.pool, task_attempt.task_id).await
                     && let Ok(Some(project)) =
                         Project::find_by_id(&self.db.pool, task.project_id).await
-                    && project.release_ports_on_completion
+                    && project.should_release_ports_on_completion()
                 {
                     if let Ok(released) =
                         TaskAttempt::release_assigned_ports_for_task(&self.db.pool, task.id).await

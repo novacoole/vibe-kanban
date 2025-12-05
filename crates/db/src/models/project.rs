@@ -30,7 +30,8 @@ pub struct Project {
     pub dev_script: Option<String>,
     pub cleanup_script: Option<String>,
     pub copy_files: Option<String>,
-    pub release_ports_on_completion: bool,
+    /// When enabled (or None, which defaults to enabled), assigned ports are automatically released on task completion
+    pub release_ports_on_completion: Option<bool>,
     pub remote_project_id: Option<Uuid>,
     #[ts(type = "Date")]
     pub created_at: DateTime<Utc>,
@@ -47,12 +48,7 @@ pub struct CreateProject {
     pub dev_script: Option<String>,
     pub cleanup_script: Option<String>,
     pub copy_files: Option<String>,
-    #[serde(default = "default_release_ports")]
-    pub release_ports_on_completion: bool,
-}
-
-fn default_release_ports() -> bool {
-    true
+    pub release_ports_on_completion: Option<bool>,
 }
 
 #[derive(Debug, Deserialize, TS)]
@@ -81,6 +77,11 @@ pub enum SearchMatchType {
 }
 
 impl Project {
+    /// Returns whether ports should be released on task completion (defaults to true if not set)
+    pub fn should_release_ports_on_completion(&self) -> bool {
+        self.release_ports_on_completion.unwrap_or(true)
+    }
+
     pub async fn count(pool: &SqlitePool) -> Result<i64, sqlx::Error> {
         sqlx::query_scalar!(r#"SELECT COUNT(*) as "count!: i64" FROM projects"#)
             .fetch_one(pool)
@@ -285,7 +286,7 @@ impl Project {
         dev_script: Option<String>,
         cleanup_script: Option<String>,
         copy_files: Option<String>,
-        release_ports_on_completion: bool,
+        release_ports_on_completion: Option<bool>,
     ) -> Result<Self, sqlx::Error> {
         sqlx::query_as!(
             Project,
