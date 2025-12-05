@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, ChevronRight, Plug } from 'lucide-react';
+import { PortsList } from './PortsList';
 
 interface AssignedPortsCardProps {
   assignedPorts: string | null;
@@ -14,7 +15,6 @@ export function AssignedPortsCard({ assignedPorts }: AssignedPortsCardProps) {
     return null;
   }
 
-  // Parse the ports JSON
   let ports: Record<string, number> = {};
   try {
     ports = JSON.parse(assignedPorts);
@@ -22,8 +22,8 @@ export function AssignedPortsCard({ assignedPorts }: AssignedPortsCardProps) {
     return null;
   }
 
-  const portEntries = Object.entries(ports);
-  if (portEntries.length === 0) {
+  const portCount = Object.keys(ports).length;
+  if (portCount === 0) {
     return null;
   }
 
@@ -41,7 +41,7 @@ export function AssignedPortsCard({ assignedPorts }: AssignedPortsCardProps) {
             {t('assignedPorts.cardTitle')}
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {t('assignedPorts.cardSubtitle', { count: portEntries.length })}
+            {t('assignedPorts.cardSubtitle', { count: portCount })}
           </p>
         </div>
         {isExpanded ? (
@@ -53,14 +53,7 @@ export function AssignedPortsCard({ assignedPorts }: AssignedPortsCardProps) {
 
       {isExpanded && (
         <div className="px-4 pb-4">
-          <div className="rounded-md border bg-background p-3 font-mono text-sm">
-            {portEntries.map(([key, value]) => (
-              <div key={key} className="flex justify-between py-1">
-                <span className="text-muted-foreground">{key}</span>
-                <span className="font-semibold">{value}</span>
-              </div>
-            ))}
-          </div>
+          <PortsList ports={ports} />
           <p className="text-xs text-muted-foreground mt-2">
             {t('assignedPorts.cardHint')}
           </p>

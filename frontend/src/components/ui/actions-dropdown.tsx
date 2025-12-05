@@ -151,7 +151,6 @@ export function ActionsDropdown({
       attemptId: attempt.id,
       assignedPorts: attempt.assigned_ports,
       onPortsReleased: () => {
-        // Invalidate task attempt queries to refresh the UI
         queryClient.invalidateQueries({ queryKey: ['taskAttempt', attempt.id] });
         queryClient.invalidateQueries({ queryKey: ['taskAttempts'] });
       },

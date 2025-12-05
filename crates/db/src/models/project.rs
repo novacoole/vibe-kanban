@@ -30,7 +30,6 @@ pub struct Project {
     pub dev_script: Option<String>,
     pub cleanup_script: Option<String>,
     pub copy_files: Option<String>,
-    /// When enabled (or None, which defaults to enabled), assigned ports are automatically released on task completion
     pub release_ports_on_completion: Option<bool>,
     pub remote_project_id: Option<Uuid>,
     #[ts(type = "Date")]
@@ -77,7 +76,6 @@ pub enum SearchMatchType {
 }
 
 impl Project {
-    /// Returns whether ports should be released on task completion (defaults to true if not set)
     pub fn should_release_ports_on_completion(&self) -> bool {
         self.release_ports_on_completion.unwrap_or(true)
     }

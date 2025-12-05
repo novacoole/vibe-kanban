@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { attemptsApi } from '@/lib/api';
 import { defineModal } from '@/lib/modals';
 import { Unplug } from 'lucide-react';
+import { PortsList } from '@/components/tasks/TaskDetails/PortsList';
 
 interface AssignedPortsDialogProps {
   attemptId: string;
@@ -26,12 +27,10 @@ const AssignedPortsDialogImpl = NiceModal.create<AssignedPortsDialogProps>(
     const modal = useModal();
     const [isReleasing, setIsReleasing] = useState(false);
 
-    // Parse the ports JSON
     const ports: Record<string, number> = assignedPorts
       ? JSON.parse(assignedPorts)
       : {};
-    const portEntries = Object.entries(ports);
-    const hasNoPorts = portEntries.length === 0;
+    const hasPorts = Object.keys(ports).length > 0;
 
     const handleReleasePorts = async () => {
       setIsReleasing(true);
@@ -52,22 +51,15 @@ const AssignedPortsDialogImpl = NiceModal.create<AssignedPortsDialogProps>(
           <DialogHeader>
             <DialogTitle>{t('assignedPorts.title')}</DialogTitle>
             <DialogDescription>
-              {hasNoPorts
-                ? t('assignedPorts.noPortsDescription')
-                : t('assignedPorts.description')}
+              {hasPorts
+                ? t('assignedPorts.description')
+                : t('assignedPorts.noPortsDescription')}
             </DialogDescription>
           </DialogHeader>
 
-          {!hasNoPorts && (
+          {hasPorts && (
             <div className="py-4">
-              <div className="rounded-md border bg-muted/30 p-3 font-mono text-sm">
-                {portEntries.map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-1">
-                    <span className="text-muted-foreground">{key}</span>
-                    <span className="font-semibold">{value}</span>
-                  </div>
-                ))}
-              </div>
+              <PortsList ports={ports} />
             </div>
           )}
 
@@ -75,7 +67,7 @@ const AssignedPortsDialogImpl = NiceModal.create<AssignedPortsDialogProps>(
             <Button variant="outline" onClick={() => modal.hide()}>
               {t('common:buttons.close')}
             </Button>
-            {!hasNoPorts && (
+            {hasPorts && (
               <Button
                 variant="destructive"
                 onClick={handleReleasePorts}

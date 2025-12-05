@@ -174,7 +174,6 @@ function ProcessesTab({ attemptId }: ProcessesTabProps) {
               {!isConnected && ` ${t('processes.reconnecting')}`}
             </div>
           )}
-          {/* Assigned Ports Card - shown before processes */}
           {taskAttempt?.assigned_ports && (
             <div className="mb-3">
               <AssignedPortsCard assignedPorts={taskAttempt.assigned_ports} />
