@@ -36,6 +36,7 @@ interface ProjectFormState {
   dev_script: string;
   cleanup_script: string;
   copy_files: string;
+  release_ports_on_completion: boolean;
 }
 
 function projectToFormState(project: Project): ProjectFormState {
@@ -46,6 +47,7 @@ function projectToFormState(project: Project): ProjectFormState {
     dev_script: project.dev_script ?? '',
     cleanup_script: project.cleanup_script ?? '',
     copy_files: project.copy_files ?? '',
+    release_ports_on_completion: project.release_ports_on_completion,
   };
 }
 
@@ -214,6 +216,7 @@ export function ProjectSettings() {
         dev_script: draft.dev_script.trim() || null,
         cleanup_script: draft.cleanup_script.trim() || null,
         copy_files: draft.copy_files.trim() || null,
+        release_ports_on_completion: draft.release_ports_on_completion,
       };
 
       updateProject.mutate({
@@ -463,6 +466,24 @@ export function ProjectSettings() {
                   {t('settings.projects.scripts.copyFiles.helper')}
                 </p>
               </div>
+
+              <div className="flex items-center space-x-2 pt-4 border-t">
+                <input
+                  type="checkbox"
+                  id="release-ports"
+                  checked={draft.release_ports_on_completion}
+                  onChange={(e) =>
+                    updateDraft({ release_ports_on_completion: e.target.checked })
+                  }
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <Label htmlFor="release-ports" className="cursor-pointer">
+                  {t('settings.projects.scripts.releasePorts.label')}
+                </Label>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {t('settings.projects.scripts.releasePorts.helper')}
+              </p>
             </CardContent>
           </Card>
 

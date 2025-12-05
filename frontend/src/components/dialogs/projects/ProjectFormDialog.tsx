@@ -51,6 +51,7 @@ const ProjectFormDialogImpl = NiceModal.create<ProjectFormDialogProps>(() => {
       dev_script: null,
       cleanup_script: null,
       copy_files: null,
+      release_ports_on_completion: true,
     };
 
     createProject.mutate(createData);
@@ -81,6 +82,7 @@ const ProjectFormDialogImpl = NiceModal.create<ProjectFormDialogProps>(() => {
       dev_script: null,
       cleanup_script: null,
       copy_files: null,
+      release_ports_on_completion: true,
     };
 
     createProject.mutate(createData);

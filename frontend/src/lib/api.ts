@@ -566,6 +566,16 @@ export const attemptsApi = {
     return handleApiResponse<RenameBranchResponse>(response);
   },
 
+  releasePorts: async (attemptId: string): Promise<void> => {
+    const response = await makeRequest(
+      `/api/task-attempts/${attemptId}/release-ports`,
+      {
+        method: 'POST',
+      }
+    );
+    return handleApiResponse<void>(response);
+  },
+
   abortConflicts: async (attemptId: string): Promise<void> => {
     const response = await makeRequest(
       `/api/task-attempts/${attemptId}/conflicts/abort`,

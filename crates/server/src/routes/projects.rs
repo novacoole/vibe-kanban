@@ -206,6 +206,7 @@ pub async fn create_project(
         cleanup_script,
         copy_files,
         use_existing_repo,
+        release_ports_on_completion,
     } = payload;
     tracing::debug!("Creating project '{}'", name);
 
@@ -292,6 +293,7 @@ pub async fn create_project(
             dev_script,
             cleanup_script,
             copy_files,
+            release_ports_on_completion,
         },
         id,
     )
@@ -333,6 +335,7 @@ pub async fn update_project(
         dev_script,
         cleanup_script,
         copy_files,
+        release_ports_on_completion,
     } = payload;
     // If git_repo_path is being changed, check if the new path is already used by another project
     let git_repo_path = if let Some(new_git_repo_path) = git_repo_path.map(|s| expand_tilde(&s))
@@ -369,6 +372,7 @@ pub async fn update_project(
         dev_script,
         cleanup_script,
         copy_files,
+        release_ports_on_completion.unwrap_or(existing_project.release_ports_on_completion),
     )
     .await
     {
